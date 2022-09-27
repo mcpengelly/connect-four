@@ -50,12 +50,23 @@ struct ConnectBoardView: View {
         let gridVisual = VStack {
             ForEach(board.grid, id: \.self) { row in
                 HStack {
-                    ForEach(row, id: \.self) { column in
-                        Text("[\(column)]")
+                    ForEach(row, id: \.self) { cell in
+                        if cell == 0 {
+                            Image(systemName: "circle.fill").shadow(radius: 1).foregroundColor(.white)
+                        } else if cell == 1 {
+                            Image(systemName: "circle.fill").shadow(radius: 1).foregroundColor(.red)
+                        } else if cell == 2 {
+                            Image(systemName: "circle.fill").shadow(radius: 1).foregroundColor(.blue)
+                        }
                     }
                 }
             }
-        }
+        }.padding()
+            .background(.yellow)
+            .overlay(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(.blue, lineWidth: 3)
+            )
         
         let inputSelection = HStack {
             ForEach(0...5, id: \.self) { index in
@@ -65,7 +76,7 @@ struct ConnectBoardView: View {
                    
                     // refactor to remove hardcode
                     if playerTurn == 1 {
-                        player1.placeChecker(board: &board, column: index)
+                        let wasSuccessful = player1.placeChecker(board: &board, column: index)
                         let isGameOver = game.checkGameOverOptimized(board: &board)
                         if isGameOver {
                             gameState = .GameOver
@@ -73,7 +84,7 @@ struct ConnectBoardView: View {
                         playerTurn = 2
                         winnerId = 1
                     } else if playerTurn == 2 {
-                        player2.placeChecker(board: &board, column: index)
+                        let wasSuccessful = player2.placeChecker(board: &board, column: index)
                         let isGameOver = game.checkGameOverOptimized(board: &board)
                         if isGameOver {
                             gameState = .GameOver

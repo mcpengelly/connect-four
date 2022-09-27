@@ -21,11 +21,13 @@ class Player {
         Player.playerCount -= 1
     }
     
-    func placeChecker(board: inout Board, column: Int) {
+    func placeChecker(board: inout Board, column: Int) -> Bool {
         do {
             try board.placeChecker(column: column, playerId: playerId)
+            return true
         } catch {
             print("player could not place checker")
+            return false
         }
     }
 }
